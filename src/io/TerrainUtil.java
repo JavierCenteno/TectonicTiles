@@ -29,7 +29,7 @@ import util.Util;
 
 public class TerrainUtil {
 
-	public static void printTerrain(Terrain terrain) {
+	public static void printTerrain(Terrain terrain, String path) {
 		int terrainSizeY = terrain.getSizeY();
 		int terrainSizeX = terrain.getSizeX();
 
@@ -75,7 +75,7 @@ public class TerrainUtil {
 				bufferedImage.setRGB(tileIndexX, tileIndexY, color);
 			}
 		}
-		final File file = new File("C:\\Users\\jacen\\Desktop\\world.png");
+		final File file = new File(path);
 		try {
 			ImageIO.write(bufferedImage, "PNG", file);
 		} catch (final IOException e) {

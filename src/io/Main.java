@@ -55,6 +55,10 @@ public class Main {
 	 * loop will exit once the current iteration is done.
 	 */
 	private static boolean RUNNING = true;
+	/**
+	 * Current generated terrain.
+	 */
+	private static Terrain TERRAIN;
 
 	////////////////////////////////////////////////////////////////////////////////
 	// Main method
@@ -76,6 +80,9 @@ public class Main {
 					break;
 				case "generate":
 					generate();
+					break;
+				case "print":
+					print();
 					break;
 				case "exit":
 					exit();
@@ -111,27 +118,39 @@ public class Main {
 
 	public static void printHelp() {
 		output("Type \"help\" for help.");
-		output("Type \"generate\" to generate a world.");
+		output("Type \"generate\" to generate a terrain.");
+		output("Type \"print\" to print a generated terrain.");
 		output("Type \"exit\" to quit.");
 	}
+
+	// TODO: handle I/O errors
 
 	public static void generate() throws IOException {
 		Generator generator = new Generator();
 		
-		output("Input tectonic plate size:");
+		output("Enter tectonic plate size:");
 		String plateSize = input();
 		generator.setPlateSize(Integer.parseInt(plateSize));
 		
-		output("Input width in number of plates:");
+		output("Enter width in number of plates:");
 		String numberOfPlatesX = input();
 		generator.setNumberOfPlatesX(Integer.parseInt(numberOfPlatesX));
 
-		output("Input height in number of plates:");
+		output("Enter height in number of plates:");
 		String numberOfPlatesY = input();
 		generator.setNumberOfPlatesY(Integer.parseInt(numberOfPlatesY));
 		
-		Terrain terrain = generator.generate();
-		TerrainUtil.printTerrain(terrain);
+		TERRAIN = generator.generate();
+		
+		output("Terrain generated successfully. Enter print to print the generated terrain.");
+	}
+
+	public static void print() throws IOException {
+		output("Enter path of the file to print to:");
+		String path = input();
+		TerrainUtil.printTerrain(TERRAIN, path);
+		
+		output("File printed successfully.");
 	}
 
 	public static void exit() {

@@ -16,15 +16,17 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package crease;
+package core.crease;
+
+import core.Crease;
 
 /**
  * Definition of the delta crease function. This function equals 1 at the center, 0 elsewhere.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
- * @version 0.1
- * @since 0.1
- * @see crease.Crease
+ * @version 0.2
+ * @since 0.2
+ * @see core.Crease
  *
  */
 public class Delta implements Crease {
@@ -33,7 +35,7 @@ public class Delta implements Crease {
 	}
 
 	@Override
-	public double valueAt(int startX, int startY, int endX, int endY, int thisX, int thisY) {
+	public double valueAt(double startX, double startY, double endX, double endY, double thisX, double thisY) {
 		if (thisY == endY) {
 			if (thisX == endX) {
 				return 1.0d;

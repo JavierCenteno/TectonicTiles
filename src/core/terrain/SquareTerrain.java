@@ -16,15 +16,42 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package core;
+package core.terrain;
+
+import core.Terrain;
 
 /**
- * A terrain consisting of a set of tiles which have a set of values each.
+ * A terrain with square shaped tiles, square shaped tectonic plates and a
+ * rectangular shape.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
  * @version 0.2
  * @since 0.2
+ * @see core.Terrain
  *
  */
-public abstract class Terrain {
+public class SquareTerrain extends Terrain {
+
+	private double[][] tiles;
+
+	public SquareTerrain(int sizeX, int sizeY) {
+		this.tiles = new double[sizeY][sizeX];
+	}
+
+	public int getSizeX() {
+		return tiles[0].length;
+	}
+
+	public int getSizeY() {
+		return tiles.length;
+	}
+
+	public double getTile(int indexX, int indexY) {
+		return tiles[indexY][indexX];
+	}
+
+	public double setTile(int indexX, int indexY, double value) {
+		return tiles[indexY][indexX] = value;
+	}
+
 }

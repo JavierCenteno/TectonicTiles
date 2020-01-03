@@ -18,6 +18,14 @@
 
 package util;
 
+/**
+ * Math utilities.
+ *
+ * @author Javier Centeno Vega <jacenve@telefonica.net>
+ * @version 0.2
+ * @since 0.2
+ *
+ */
 public class Util {
 
 	public static double square(double x) {
@@ -56,14 +64,14 @@ public class Util {
 		return Math.sqrt(square(y) + square(x));
 	}
 
-	public static int toUnsignedByteWithoutOverflow(final int x) {
-		if (x > 0xFF) {
-			return 0xFF;
+	public static int bound(int min, int max, int x) {
+		if(x <= min) {
+			return min;
+		} else if(x >= max) {
+			return max;
+		} else {
+			return x;
 		}
-		if (x < 0) {
-			return 0;
-		}
-		return x;
 	}
 
 }

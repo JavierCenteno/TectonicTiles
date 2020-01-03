@@ -22,8 +22,8 @@ package random;
  * Implementation of a xorshift64* PRNG.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
- * @version 0.1
- * @since 0.1
+ * @version 0.2
+ * @since 0.2
  * @see random.RandomGenerator
  *
  */

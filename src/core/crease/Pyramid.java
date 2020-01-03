@@ -16,31 +16,28 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package crease;
+package core.crease;
 
+import core.Crease;
 import util.Util;
 
 /**
- * Definition of the SmootherStep crease function. This function uses the
- * Euclidean distance to the center to determine its value and interpolates
- * using the SmootherStep function.
- *
- * The SmoothestStep function is defined by y = 6x^5 - 15x^4 + 10x^3.
+ * Definition of the pyramid crease function. This function uses the Chebyshev distance to the center to determine its value.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
- * @version 0.1
- * @since 0.1
- * @see crease.Crease
+ * @version 0.2
+ * @since 0.2
+ * @see core.Crease
  *
  */
-public class SmootherStep implements Crease {
+public class Pyramid implements Crease {
 
 	private final double heightFactor;
 	private final double heightPower;
 	private final double radiusFactor;
 	private final double radiusPower;
 
-	public SmootherStep(double heightFactor, double heightPower, double radiusFactor, double radiusPower) {
+	public Pyramid(double heightFactor, double heightPower, double radiusFactor, double radiusPower) {
 		this.heightFactor = heightFactor;
 		this.heightPower = heightPower;
 		this.radiusFactor = radiusFactor;
@@ -48,21 +45,16 @@ public class SmootherStep implements Crease {
 	}
 
 	@Override
-	public double valueAt(int startX, int startY, int endX, int endY, int thisX, int thisY) {
-		/*
-		 * Calculate distance to end tile normalized to distance between start and end
-		 * tiles
-		 */
+	public double valueAt(double startX, double startY, double endX, double endY, double thisX, double thisY) {
 		// Magnitude of the movement vector
-		final double movementVectorMagnitude = Util.euclideanDistance(startY, startX, endY, endX);
+		final double movementVectorMagnitude = Util.chebyshevDistance(startY, startX, endY, endX);
 		// Height of the crease function
 		final double height = Util.power(movementVectorMagnitude, heightPower) * heightFactor;
 		// Radius of the crease function
 		final double radius = Util.power(movementVectorMagnitude, radiusPower) * radiusFactor;
 		// Distance from the target tile to the center of the crease function
-		final double distanceToCenter = Util.euclideanDistance(thisY, thisX, endY, endX);
-		// If the target tile is outside of the tiles affected by the function, height
-		// is zero.
+		final double distanceToCenter = Util.chebyshevDistance(thisY, thisX, endY, endX);
+		// If the target tile is outside of the tiles affected by the function, height is zero.
 		if (distanceToCenter > radius) {
 			return 0;
 		}
@@ -71,16 +63,8 @@ public class SmootherStep implements Crease {
 		// Distance from the target tile to the edge of the crease function,
 		// normalized so that the edge is at a distance of 1
 		final double distanceToEdgeNormalized = distanceToEdge / radius;
-		/*
-		 * Calculate interpolation function
-		 */
-		final double x = distanceToEdgeNormalized;
-		final double x3 = x * x * x;
-		final double x4 = x3 * x;
-		final double x5 = x4 * x;
-		final double y = (((6 * x5) - (15 * x4)) + (10 * x3));
-		// Result
-		return y * height;
+		// Interpolate
+		return distanceToEdgeNormalized * height;
 	}
 
 }

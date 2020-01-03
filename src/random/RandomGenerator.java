@@ -18,10 +18,18 @@
 
 package random;
 
+/**
+ * This interface offers methods to generate random numbers.
+ *
+ * @author Javier Centeno Vega <jacenve@telefonica.net>
+ * @version 0.2
+ * @since 0.2
+ *
+ */
 public interface RandomGenerator {
 
 	/**
-	 * 
+	 * Get a random long integer uniforme distributed in the long integer range.
 	 */
 	public long generateLong();
 

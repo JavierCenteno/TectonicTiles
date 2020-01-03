@@ -16,20 +16,33 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io;
+package core;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.awt.image.RenderedImage;
 
-import javax.imageio.ImageIO;
-
-import core.Terrain;
+import core.terrain.SquareTerrain;
 import util.Util;
 
+/**
+ * Utilities to export and import terrains to other forms of data.
+ *
+ * @author Javier Centeno Vega <jacenve@telefonica.net>
+ * @version 0.2
+ * @since 0.2
+ * @see core.Terrain
+ *
+ */
 public class TerrainUtil {
 
-	public static void printTerrain(Terrain terrain, String path) {
+	public static RenderedImage printTerrain(Terrain terrain) {
+		if(terrain.getClass().equals(SquareTerrain.class)) {
+			return printSquareTerrain((SquareTerrain) terrain);
+		}
+		throw new IllegalArgumentException("Terrain class not supported.");
+	}
+
+	public static RenderedImage printSquareTerrain(SquareTerrain terrain) {
 		int terrainSizeY = terrain.getSizeY();
 		int terrainSizeX = terrain.getSizeX();
 
@@ -41,46 +54,53 @@ public class TerrainUtil {
 		for (int tileIndexY = 0; tileIndexY < terrainSizeY; ++tileIndexY) {
 			for (int tileIndexX = 0; tileIndexX < terrainSizeX; ++tileIndexX) {
 				double tile = terrain.getTile(tileIndexX, tileIndexY);
-				if(tile > highestTile) {
+				if (tile > highestTile) {
 					highestTile = tile;
-				} else if(tile < lowestTile) {
+				} else if (tile < lowestTile) {
 					lowestTile = tile;
 				}
 			}
 		}
 		double middleTile = (highestTile + lowestTile) / 2.0d;
 		double tileDifference = highestTile - middleTile;
-		
+
 		final BufferedImage bufferedImage = new BufferedImage(terrainSizeX, terrainSizeY, BufferedImage.TYPE_INT_ARGB);
 		for (int tileIndexY = 0; tileIndexY < terrainSizeY; ++tileIndexY) {
 			for (int tileIndexX = 0; tileIndexX < terrainSizeX; ++tileIndexX) {
 				int color = 0;
 				double tile = terrain.getTile(tileIndexX, tileIndexY) - (seaLevelFactor * middleTile);
 				if (tile == 0.0d) {
-					color |= 0xFF << 24;// alpha
-					color |= 0x00 << 16;// red
-					color |= 0xFF << 8;// green
-					color |= 0xFF << 0;// blue
+					// alpha
+					color |= 0xFF << 24;
+					// red
+					color |= 0x00 << 16;
+					// green
+					color |= 0xFF << 8;
+					// blue
+					color |= 0xFF << 0;
 				} else if (tile > 0.0d) {
-					color |= 0xFF << 24;// alpha
-					color |= 0x00 << 16;// red
-					color |= (0xFF - Util.toUnsignedByteWithoutOverflow((int) (128.0d * tile / tileDifference))) << 8;// green
-					color |= 0x00 << 0;// blue
+					// alpha
+					color |= 0xFF << 24;
+					// red
+					color |= 0x00 << 16;
+					// green
+					color |= (0xFF - Util.bound(0x00, 0xFF, (int) (128.0d * tile / tileDifference))) << 8;
+					// blue
+					color |= 0x00 << 0;
 				} else if (tile < 0.0d) {
-					color |= 0xFF << 24;// alpha
-					color |= 0x00 << 16;// red
-					color |= 0x00 << 0;// green
-					color |= (0xFF - Util.toUnsignedByteWithoutOverflow((int) (-128.0d * tile / tileDifference)));// blue
+					// alpha
+					color |= 0xFF << 24;
+					// red
+					color |= 0x00 << 16;
+					// green
+					color |= 0x00 << 0;
+					// blue
+					color |= (0xFF - Util.bound(0x00, 0xFF, (int) (-128.0d * tile / tileDifference)));
 				}
 				bufferedImage.setRGB(tileIndexX, tileIndexY, color);
 			}
 		}
-		final File file = new File(path);
-		try {
-			ImageIO.write(bufferedImage, "PNG", file);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+		return bufferedImage;
 	}
 
 }

@@ -256,35 +256,35 @@
 <p>In order to generate a terrain (or perform any other action), you just need to instance the configurers of the desired terrain and crease types and then call the methods of the terrain configurer that correspond to the action you want to perform.</p>
 
 <code>
-<br>01 InputStream is = null;
-<br>02 OutputStream os = null;
-<br>03 RandomGenerator rng = new Xorshift64StarGenerator();
-<br>04 
-<br>05 ConeConfigurer creaseConfigurer = new ConeConfigurer("");
-<br>06 creaseConfigurer.getHeightFactor().setCurrentValue(1.0d);
-<br>07 creaseConfigurer.getHeightPower().setCurrentValue(1.0d);
-<br>08 creaseConfigurer.getWidthFactor().setCurrentValue(4.0d);
-<br>09 creaseConfigurer.getWidthPower().setCurrentValue(1.0d);
-<br>10 Crease crease = creaseConfigurer.generate();
-<br>11 
-<br>12 SquareTerrainConfigurer terrainConfigurer = new SquareTerrainConfigurer("");
-<br>13 terrainConfigurer.getPlateSize().setCurrentValue(20);
-<br>14 terrainConfigurer.getNumberOfPlatesX().setCurrentValue(40);
-<br>15 terrainConfigurer.getNumberOfPlatesY().setCurrentValue(20);
-<br>16 terrainConfigurer.getWaterParameters().getDeterminer().setCurrentValue(true);
-<br>17 terrainConfigurer.getWaterParameters().getSeaLevel().setCurrentValue(16);
-<br>18 terrainConfigurer.getMagmaParameters().getDeterminer().setCurrentValue(false);
-<br>19 
-<br>20 terrainConfigurer.generate(rng, crease);
-<br>21 
-<br>22 try {
-<br>23 	terrainConfigurer.importTerrain("csv", is);
-<br>24 	terrainConfigurer.exportTerrain("csv", os);
-<br>25 } catch (IOException e) {
-<br>26 	e.printStackTrace();
-<br>27 }
-<br>28 
-<br>29 RenderedImage im = terrainConfigurer.toImage();
+InputStream is = null;
+OutputStream os = null;
+RandomGenerator rng = new Xorshift64StarGenerator();
+
+ConeConfigurer creaseConfigurer = new ConeConfigurer("");
+creaseConfigurer.getHeightFactor().setCurrentValue(1.0d);
+creaseConfigurer.getHeightPower().setCurrentValue(1.0d);
+creaseConfigurer.getWidthFactor().setCurrentValue(4.0d);
+creaseConfigurer.getWidthPower().setCurrentValue(1.0d);
+Crease crease = creaseConfigurer.generate();
+
+SquareTerrainConfigurer terrainConfigurer = new SquareTerrainConfigurer("");
+terrainConfigurer.getPlateSize().setCurrentValue(20);
+terrainConfigurer.getNumberOfPlatesX().setCurrentValue(40);
+terrainConfigurer.getNumberOfPlatesY().setCurrentValue(20);
+terrainConfigurer.getWaterParameters().getDeterminer().setCurrentValue(true);
+terrainConfigurer.getWaterParameters().getSeaLevel().setCurrentValue(16);
+terrainConfigurer.getMagmaParameters().getDeterminer().setCurrentValue(false);
+
+terrainConfigurer.generate(rng, crease);
+
+try {
+	terrainConfigurer.importTerrain("csv", is);
+	terrainConfigurer.exportTerrain("csv", os);
+} catch (IOException e) {
+	e.printStackTrace();
+}
+
+RenderedImage im = terrainConfigurer.toImage();
 </code>
 
 

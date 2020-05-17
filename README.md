@@ -31,3 +31,13 @@
 	<li><a href="./help/esp.md" title="Español neutro">Español neutro</a></li>
 </ul>
 
+
+
+<h2>Planned features</h2>
+
+<ul>
+	<li>Different ways to choose the start and end tiles of a movement vector. For example, choosing tiles outside of the tectonic plate or choosing tiles within a circle around the plate rather than in the plate.</li>
+	<li>Add a material layer to the terrain which indicates which material the soil is made out of. Harder materials should be higher up (that'd enable plateaux to form). Could also be possible to add a terrain granularity/terrain hardness layer.</li>
+	<li>Add ways of generating hidrology such as rivers and dams.</li>
+</ul>
+

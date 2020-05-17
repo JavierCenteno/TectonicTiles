@@ -193,7 +193,7 @@
 
 <h3 id="GraphicalMode#Print">Cómo convertir un terreno a imagen</h3>
 
-<p>Una vez un terreno ha sido generado o importado, pulse el botón <code>exportar</code> y seleccione un archivo hacia el cual exportar.</p>
+<p>Una vez un terreno ha sido generado o importado, pulse el botón <code>imprimir</code> y seleccione un archivo hacia el cual imprimir.</p>
 
 
 

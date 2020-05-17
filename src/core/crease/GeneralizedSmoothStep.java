@@ -1,6 +1,9 @@
 /*
- * This software is a random terrain generator inspired by plate tectonics.
- * Copyright (C) 2019 Javier Centeno Vega
+ * GeneralizedSmoothStep.java
+ * 
+ * This file is part of Tectonic Tiles.
+ * Tectonic Tiles is a random terrain generator inspired by plate tectonics.
+ * Copyright (C) 2020 Javier Centeno Vega
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,18 +22,22 @@
 package core.crease;
 
 import core.Crease;
-import util.Util;
+import util.Math;
 
 /**
- * Crease function using an interpolation function such that its value is 0 at 0, 1 at 1 and a given value at 0.5 having a zero derivative at 0 and 1.
+ * Crease function using an interpolation function such that its value is 0 at
+ * 0, 1 at 1 and a given value at 0.5 having a zero derivative at 0 and 1.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
- * @version 0.2
- * @since 0.2
+ * @version 0.3
+ * @since 0.1
  * @see core.Crease
  *
  */
 public class GeneralizedSmoothStep implements Crease {
+
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance fields
 
 	private final double heightFactor;
 	private final double heightPower;
@@ -39,7 +46,27 @@ public class GeneralizedSmoothStep implements Crease {
 	private final double middlePointFactor;
 	private final double middlePointPower;
 
-	public GeneralizedSmoothStep(double heightFactor, double heightPower, double radiusFactor, double radiusPower, double middlePointFactor, double middlePointPower) {
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance initializers
+
+	/**
+	 * Construct a new generalized smooth step crease function.
+	 * 
+	 * @param heightFactor      The factor by which the height of the function is
+	 *                          multiplied.
+	 * @param heightPower       The power to which the height of the function is
+	 *                          raised.
+	 * @param radiusFactor      The factor by which the width of the function is
+	 *                          multiplied.
+	 * @param radiusPower       The power to which the width of the function is
+	 *                          raised.
+	 * @param middlePointFactor The factor by which the height of the middle point
+	 *                          of the function is multiplied.
+	 * @param middlePointPower  The power to which the height of the middle point of
+	 *                          the function is raised.
+	 */
+	public GeneralizedSmoothStep(double heightFactor, double heightPower, double radiusFactor, double radiusPower,
+			double middlePointFactor, double middlePointPower) {
 		this.heightFactor = heightFactor;
 		this.heightPower = heightPower;
 		this.radiusFactor = radiusFactor;
@@ -48,6 +75,9 @@ public class GeneralizedSmoothStep implements Crease {
 		this.middlePointPower = middlePointPower;
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance methods
+
 	@Override
 	public double valueAt(double startX, double startY, double endX, double endY, double thisX, double thisY) {
 		/*
@@ -55,15 +85,15 @@ public class GeneralizedSmoothStep implements Crease {
 		 * tiles
 		 */
 		// Magnitude of the movement vector
-		final double movementVectorMagnitude = Util.euclideanDistance(startY, startX, endY, endX);
+		final double movementVectorMagnitude = Math.euclideanDistance(startY, startX, endY, endX);
 		// Height of the crease function
-		final double height = Util.power(movementVectorMagnitude, heightPower) * heightFactor;
+		final double height = Math.power(movementVectorMagnitude, heightPower) * heightFactor;
 		// Radius of the crease function
-		final double radius = Util.power(movementVectorMagnitude, radiusPower) * radiusFactor;
+		final double radius = Math.power(movementVectorMagnitude, radiusPower) * radiusFactor;
 		// Height of the middle point of the interpolation function
-		final double middlePoint = Util.power(movementVectorMagnitude, middlePointPower) * middlePointFactor;
+		final double middlePoint = Math.power(movementVectorMagnitude, middlePointPower) * middlePointFactor;
 		// Distance from the target tile to the center of the crease function
-		final double distanceToCenter = Util.euclideanDistance(thisY, thisX, endY, endX);
+		final double distanceToCenter = Math.euclideanDistance(thisY, thisX, endY, endX);
 		// If the target tile is outside of the tiles affected by the function, height
 		// is zero.
 		if (distanceToCenter > radius) {

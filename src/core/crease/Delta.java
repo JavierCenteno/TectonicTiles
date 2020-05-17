@@ -1,6 +1,9 @@
 /*
- * This software is a random terrain generator inspired by plate tectonics.
- * Copyright (C) 2019 Javier Centeno Vega
+ * Delta.java
+ * 
+ * This file is part of Tectonic Tiles.
+ * Tectonic Tiles is a random terrain generator inspired by plate tectonics.
+ * Copyright (C) 2020 Javier Centeno Vega
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,18 +24,28 @@ package core.crease;
 import core.Crease;
 
 /**
- * Definition of the delta crease function. This function equals 1 at the center, 0 elsewhere.
+ * Definition of the delta crease function. This function equals 1 at the
+ * center, 0 elsewhere.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
- * @version 0.2
- * @since 0.2
+ * @version 0.3
+ * @since 0.1
  * @see core.Crease
  *
  */
 public class Delta implements Crease {
 
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance initializers
+
+	/**
+	 * Construct a new delta crease function.
+	 */
 	public Delta() {
 	}
+
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance methods
 
 	@Override
 	public double valueAt(double startX, double startY, double endX, double endY, double thisX, double thisY) {

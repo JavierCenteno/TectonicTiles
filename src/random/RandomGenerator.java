@@ -1,6 +1,9 @@
 /*
- * This software is a random terrain generator inspired by plate tectonics.
- * Copyright (C) 2019 Javier Centeno Vega
+ * RandomGenerator.java
+ * 
+ * This file is part of Tectonic Tiles.
+ * Tectonic Tiles is a random terrain generator inspired by plate tectonics.
+ * Copyright (C) 2020 Javier Centeno Vega
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -22,14 +25,16 @@ package random;
  * This interface offers methods to generate random numbers.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
- * @version 0.2
- * @since 0.2
+ * @version 0.3
+ * @since 0.1
  *
  */
 public interface RandomGenerator {
 
 	/**
-	 * Get a random long integer uniforme distributed in the long integer range.
+	 * Get a random long integer uniformly distributed in the long integer range.
+	 * 
+	 * @return A random long integer uniformly distributed in the long integer range.
 	 */
 	public long generateLong();
 

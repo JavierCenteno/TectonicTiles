@@ -1,6 +1,9 @@
 /*
- * This software is a random terrain generator inspired by plate tectonics.
- * Copyright (C) 2019 Javier Centeno Vega
+ * Xorshift64StarGenerator.java
+ * 
+ * This file is part of Tectonic Tiles.
+ * Tectonic Tiles is a random terrain generator inspired by plate tectonics.
+ * Copyright (C) 2020 Javier Centeno Vega
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -22,8 +25,8 @@ package random;
  * Implementation of a xorshift64* PRNG.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
- * @version 0.2
- * @since 0.2
+ * @version 0.3
+ * @since 0.1
  * @see random.RandomGenerator
  *
  */
@@ -51,6 +54,8 @@ public class Xorshift64StarGenerator implements RandomGenerator {
 
 	/**
 	 * Constructs a generator with the given seed as the initial state.
+	 * 
+	 * @param seed A seed.
 	 */
 	public Xorshift64StarGenerator(long seed) {
 		this.state = seed;

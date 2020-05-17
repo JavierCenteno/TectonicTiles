@@ -1,6 +1,9 @@
 /*
- * This software is a random terrain generator inspired by plate tectonics.
- * Copyright (C) 2019 Javier Centeno Vega
+ * SmoothStepPower.java
+ * 
+ * This file is part of Tectonic Tiles.
+ * Tectonic Tiles is a random terrain generator inspired by plate tectonics.
+ * Copyright (C) 2020 Javier Centeno Vega
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -19,34 +22,54 @@
 package core.crease;
 
 import core.Crease;
-import util.Util;
+import util.Math;
 
 /**
  * Definition of the SmoothStepPower crease function. This function uses the
  * Euclidean distance to the center to determine its value and interpolates
- * using the SmoothStep function raised to a power.
+ * using the SmoothStep function raised to the power of the height we're
+ * interpolating to.
  *
  * The SmoothestStep function is defined by y = -2x^3 + 3x^2.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
- * @version 0.2
- * @since 0.2
+ * @version 0.3
+ * @since 0.1
  * @see core.Crease
  *
  */
 public class SmoothStepPower implements Crease {
+
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance fields
 
 	private final double heightFactor;
 	private final double heightPower;
 	private final double radiusFactor;
 	private final double radiusPower;
 
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance initializers
+
+	/**
+	 * Construct a new smooth step power crease function.
+	 * 
+	 * @param heightFactor The factor by which the height of the function is
+	 *                     multiplied.
+	 * @param heightPower  The power to which the height of the function is raised.
+	 * @param radiusFactor The factor by which the width of the function is
+	 *                     multiplied.
+	 * @param radiusPower  The power to which the width of the function is raised.
+	 */
 	public SmoothStepPower(double heightFactor, double heightPower, double radiusFactor, double radiusPower) {
 		this.heightFactor = heightFactor;
 		this.heightPower = heightPower;
 		this.radiusFactor = radiusFactor;
 		this.radiusPower = radiusPower;
 	}
+
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance methods
 
 	@Override
 	public double valueAt(double startX, double startY, double endX, double endY, double thisX, double thisY) {
@@ -55,13 +78,13 @@ public class SmoothStepPower implements Crease {
 		 * tiles
 		 */
 		// Magnitude of the movement vector
-		final double movementVectorMagnitude = Util.euclideanDistance(startY, startX, endY, endX);
+		final double movementVectorMagnitude = Math.euclideanDistance(startY, startX, endY, endX);
 		// Height of the crease function
-		final double height = Util.power(movementVectorMagnitude, heightPower) * heightFactor;
+		final double height = Math.power(movementVectorMagnitude, heightPower) * heightFactor;
 		// Radius of the crease function
-		final double radius = Util.power(movementVectorMagnitude, radiusPower) * radiusFactor;
+		final double radius = Math.power(movementVectorMagnitude, radiusPower) * radiusFactor;
 		// Distance from the target tile to the center of the crease function
-		final double distanceToCenter = Util.euclideanDistance(thisY, thisX, endY, endX);
+		final double distanceToCenter = Math.euclideanDistance(thisY, thisX, endY, endX);
 		// If the target tile is outside of the tiles affected by the function, height
 		// is zero.
 		if (distanceToCenter > radius) {
@@ -78,7 +101,7 @@ public class SmoothStepPower implements Crease {
 		final double x = distanceToEdgeNormalized;
 		final double x2 = x * x;
 		final double x3 = x2 * x;
-		final double y = Util.power(((-2 * x3) + (3 * x2)), height);
+		final double y = Math.power(((-2 * x3) + (3 * x2)), height);
 		// Result
 		return y * height;
 	}

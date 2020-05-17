@@ -1,6 +1,9 @@
 /*
- * This software is a random terrain generator inspired by plate tectonics.
- * Copyright (C) 2019 Javier Centeno Vega
+ * Crease.java
+ * 
+ * This file is part of Tectonic Tiles.
+ * Tectonic Tiles is a random terrain generator inspired by plate tectonics.
+ * Copyright (C) 2020 Javier Centeno Vega
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -24,10 +27,13 @@ package core;
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
  * @version 0.2
- * @since 0.2
+ * @since 0.1
  *
  */
 public interface Crease {
+
+	////////////////////////////////////////////////////////////////////////////////
+	// Instance methods
 
 	/**
 	 * Calculates the influence of the movement vector starting at the point with

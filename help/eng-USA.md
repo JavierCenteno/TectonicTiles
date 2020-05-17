@@ -255,6 +255,7 @@
 
 <p>In order to generate a terrain (or perform any other action), you just need to instance the configurers of the desired terrain and crease types and then call the methods of the terrain configurer that correspond to the action you want to perform.</p>
 
+<pre>
 <code>
 InputStream is = null;
 OutputStream os = null;
@@ -286,6 +287,7 @@ try {
 
 RenderedImage im = terrainConfigurer.toImage();
 </code>
+</pre>
 
 
 

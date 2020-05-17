@@ -255,6 +255,7 @@
 
 <p>Para generar un terreno (o realizar cualquier otra acción), necesita instanciar los configuradores de los tipos de terreno y pliegue deseados y luego llamar a los métodos del configurador de terreno que se corresponden con la acción que se desea realizar.</p>
 
+<pre>
 <code>
 InputStream is = null;
 OutputStream os = null;
@@ -286,6 +287,7 @@ try {
 
 RenderedImage im = terrainConfigurer.toImage();
 </code>
+</pre>
 
 
 

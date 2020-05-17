@@ -1,6 +1,6 @@
 <h1>Casillas Tectónicas v0.3: Manual de usuario</h1>
 
-
+<a href="https://github.com/JavierCenteno/TectonicTiles">This project is developed on GitHub.</a>
 
 <h2 id="Index">Índice</h2>
 
@@ -256,15 +256,15 @@
 <p>Para generar un terreno (o realizar cualquier otra acción), necesita instanciar los configuradores de los tipos de terreno y pliegue deseados y luego llamar a los métodos del configurador de terreno que se corresponden con la acción que se desea realizar.</p>
 
 <code>
-<br> 1 InputStream is = null;
-<br> 2 OutputStream os = null;
-<br> 3 RandomGenerator rng = new Xorshift64StarGenerator();
-<br> 4 
-<br> 5 ConeConfigurer creaseConfigurer = new ConeConfigurer("");
-<br> 6 creaseConfigurer.getHeightFactor().setCurrentValue(1.0d);
-<br> 7 creaseConfigurer.getHeightPower().setCurrentValue(1.0d);
-<br> 8 creaseConfigurer.getWidthFactor().setCurrentValue(4.0d);
-<br> 9 creaseConfigurer.getWidthPower().setCurrentValue(1.0d);
+<br>01 InputStream is = null;
+<br>02 OutputStream os = null;
+<br>03 RandomGenerator rng = new Xorshift64StarGenerator();
+<br>04 
+<br>05 ConeConfigurer creaseConfigurer = new ConeConfigurer("");
+<br>06 creaseConfigurer.getHeightFactor().setCurrentValue(1.0d);
+<br>07 creaseConfigurer.getHeightPower().setCurrentValue(1.0d);
+<br>08 creaseConfigurer.getWidthFactor().setCurrentValue(4.0d);
+<br>09 creaseConfigurer.getWidthPower().setCurrentValue(1.0d);
 <br>10 Crease crease = creaseConfigurer.generate();
 <br>11 
 <br>12 SquareTerrainConfigurer terrainConfigurer = new SquareTerrainConfigurer("");

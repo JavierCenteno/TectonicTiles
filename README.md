@@ -27,7 +27,7 @@
 <h2>Help</h2>
 
 <ul>
-	<li><a href="./help/eng-USA.html" title="English (USA)">English (USA)</a></li>
-	<li><a href="./help/esp.html" title="Español neutro">Español neutro</a></li>
+	<li><a href="./help/eng-USA.md" title="English (USA)">English (USA)</a></li>
+	<li><a href="./help/esp.md" title="Español neutro">Español neutro</a></li>
 </ul>
 

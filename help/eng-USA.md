@@ -1,6 +1,6 @@
 <h1>Tectonic Tiles v0.3: User manual</h1>
 
-
+<a href="https://github.com/JavierCenteno/TectonicTiles">Este proyecto está desarrollado en GitHub.</a>
 
 <h2 id="Index">Index</h2>
 
@@ -127,7 +127,7 @@
 
 <p>To import a terrain, input the command <code>import</code> and then follow the instructions.</p>
 
-<p>Once a terrain is generated, you can export it (see <a href="#ConsoleMode#Export">How to export a terrain</a>) o convert it to image (see <a href="#ConsoleMode#Print">How to convert a terrain to image</a>).</p>
+<p>Once a terrain is imported, you can export it (see <a href="#ConsoleMode#Export">How to export a terrain</a>) o convert it to image (see <a href="#ConsoleMode#Print">How to convert a terrain to image</a>).</p>
 
 <p>To learn more about the export file format for the creation of software to use these files, see <a href="#InstructionsForDevelopers#TerrainFile">Terrain file reference</a>.</p>
 
@@ -135,7 +135,7 @@
 
 <h3 id="ConsoleMode#Export">How to export a terrain</h3>
 
-<p>Once a terrain is imported, input the command <code>export</code> and then follow the instructions.</p>
+<p>Once a terrain is generated or imported, input the command <code>export</code> and then follow the instructions.</p>
 
 <p>To learn more about the export file format for the creation of software to use these files, see <a href="#InstructionsForDevelopers#TerrainFile">Terrain file reference</a>.</p>
 
@@ -169,7 +169,7 @@
 
 <p>To generate a terrain, input the desired parameters and then press the <code>generate</code> button.</p>
 
-<p>Once a terrain is generated or imported, you can export it (see <a href="#GraphicalMode#Export">How to export a terrain</a>) o convert it to image (see <a href="#GraphicalMode#Print">How to convert a terrain to image</a>).</p>
+<p>Once a terrain is generated, you can export it (see <a href="#GraphicalMode#Export">How to export a terrain</a>) o convert it to image (see <a href="#GraphicalMode#Print">How to convert a terrain to image</a>).</p>
 
 
 
@@ -177,7 +177,7 @@
 
 <p>To import a terrain, press the <code>import</code> button and select a file to import from.</p>
 
-<p>Once a terrain is generated, you can export it (see <a href="#ConsoleMode#Export">How to export a terrain</a>) o convert it to image (see <a href="#ConsoleMode#Print">How to convert a terrain to image</a>).</p>
+<p>Once a terrain is imported, you can export it (see <a href="#ConsoleMode#Export">How to export a terrain</a>) o convert it to image (see <a href="#ConsoleMode#Print">How to convert a terrain to image</a>).</p>
 
 <p>To learn more about the export file format for the creation of software to use these files, see <a href="#InstructionsForDevelopers#TerrainFile">Terrain file reference</a>.</p>
 
@@ -256,15 +256,15 @@
 <p>In order to generate a terrain (or perform any other action), you just need to instance the configurers of the desired terrain and crease types and then call the methods of the terrain configurer that correspond to the action you want to perform.</p>
 
 <code>
-<br> 1 InputStream is = null;
-<br> 2 OutputStream os = null;
-<br> 3 RandomGenerator rng = new Xorshift64StarGenerator();
-<br> 4 
-<br> 5 ConeConfigurer creaseConfigurer = new ConeConfigurer("");
-<br> 6 creaseConfigurer.getHeightFactor().setCurrentValue(1.0d);
-<br> 7 creaseConfigurer.getHeightPower().setCurrentValue(1.0d);
-<br> 8 creaseConfigurer.getWidthFactor().setCurrentValue(4.0d);
-<br> 9 creaseConfigurer.getWidthPower().setCurrentValue(1.0d);
+<br>01 InputStream is = null;
+<br>02 OutputStream os = null;
+<br>03 RandomGenerator rng = new Xorshift64StarGenerator();
+<br>04 
+<br>05 ConeConfigurer creaseConfigurer = new ConeConfigurer("");
+<br>06 creaseConfigurer.getHeightFactor().setCurrentValue(1.0d);
+<br>07 creaseConfigurer.getHeightPower().setCurrentValue(1.0d);
+<br>08 creaseConfigurer.getWidthFactor().setCurrentValue(4.0d);
+<br>09 creaseConfigurer.getWidthPower().setCurrentValue(1.0d);
 <br>10 Crease crease = creaseConfigurer.generate();
 <br>11 
 <br>12 SquareTerrainConfigurer terrainConfigurer = new SquareTerrainConfigurer("");

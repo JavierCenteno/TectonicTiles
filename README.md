@@ -1,4 +1,4 @@
-<h1>Tectonic tiles v0.3</h1>
+<h1>Tectonic tiles v0.4</h1>
 
 <p>(c) 2020</p>
 

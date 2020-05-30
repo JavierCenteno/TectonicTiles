@@ -40,18 +40,20 @@ import parameter.parameter.IntegerParameter;
 import parameter.parameter.OptionParameter;
 import parameter.parameter.ParameterUtil;
 import random.RandomGenerator;
+import util.ArrayUtil;
 
 /**
- * A configurer that handles square terrains with square tectonic plates.
+ * A configurer that handles square terrains with irregularly shaped tectonic
+ * plates.
  *
  * @author Javier Centeno Vega <jacenve@telefonica.net>
  * @version 0.4
- * @since 0.1
+ * @since 0.4
  * @see io.TerrainConfigurer
  * @see core.terrain.SquareTerrain
  *
  */
-public class SquareTerrainConfigurer extends TerrainConfigurer<SquareTerrain> {
+public class IrregularSquareTerrainConfigurer extends TerrainConfigurer<SquareTerrain> {
 
 	////////////////////////////////////////////////////////////////////////////////
 	// Class fields
@@ -64,9 +66,9 @@ public class SquareTerrainConfigurer extends TerrainConfigurer<SquareTerrain> {
 	////////////////////////////////////////////////////////////////////////////////
 	// Parameters
 
-	private final IntegerParameter plateSize;
-	private final IntegerParameter numberOfPlatesX;
-	private final IntegerParameter numberOfPlatesY;
+	private final IntegerParameter numberOfPlates;
+	private final IntegerParameter terrainSizeX;
+	private final IntegerParameter terrainSizeY;
 	private final OptionParameter<Boolean> wrapAroundX;
 	private final OptionParameter<Boolean> wrapAroundY;
 	private final WaterParameters waterParameters;
@@ -76,30 +78,32 @@ public class SquareTerrainConfigurer extends TerrainConfigurer<SquareTerrain> {
 	// Accessors
 
 	/**
-	 * Get the parameter that represents the plate size.
+	 * Get the parameter that represents the number of plates.
 	 * 
-	 * @return The parameter that represents the plate size.
+	 * @return The parameter that represents the number of plates.
 	 */
-	public IntegerParameter getPlateSize() {
-		return this.plateSize;
+	public IntegerParameter getNumberOfPlates() {
+		return this.numberOfPlates;
 	}
 
 	/**
-	 * Get the parameter that represents the number of plates along the x axis.
+	 * Get the parameter that represents the terrain size in tiles along the x axis.
 	 * 
-	 * @return The parameter that represents the number of plates along the x axis.
+	 * @return The parameter that represents the terrain size in tiles along the x
+	 *         axis.
 	 */
-	public IntegerParameter getNumberOfPlatesX() {
-		return this.numberOfPlatesX;
+	public IntegerParameter getTerrainSizeX() {
+		return this.terrainSizeX;
 	}
 
 	/**
-	 * Get the parameter that represents the number of plates along the y axis.
+	 * Get the parameter that represents the terrain size in tiles along the y axis.
 	 * 
-	 * @return The parameter that represents the number of plates along the y axis.
+	 * @return The parameter that represents the terrain size in tiles along the y
+	 *         axis.
 	 */
-	public IntegerParameter getNumberOfPlatesY() {
-		return this.numberOfPlatesY;
+	public IntegerParameter getTerrainSizeY() {
+		return this.terrainSizeY;
 	}
 
 	/**
@@ -154,14 +158,14 @@ public class SquareTerrainConfigurer extends TerrainConfigurer<SquareTerrain> {
 	 * 
 	 * @param nameKey The internationalization key for the name of the configurer.
 	 */
-	public SquareTerrainConfigurer(String nameKey) {
+	public IrregularSquareTerrainConfigurer(String nameKey) {
 		super(nameKey);
-		this.plateSize = new IntegerParameter("terrain.plateSize", 16, 2, 1 << 15, false);
-		this.getParameters().add(this.plateSize);
-		this.numberOfPlatesX = new IntegerParameter("terrain.numberOfPlatesX", 32, 1, 1 << 15, false);
-		this.getParameters().add(this.numberOfPlatesX);
-		this.numberOfPlatesY = new IntegerParameter("terrain.numberOfPlatesY", 16, 1, 1 << 15, false);
-		this.getParameters().add(this.numberOfPlatesY);
+		this.numberOfPlates = new IntegerParameter("terrain.numberOfPlates", 512, 2, 1 << 15, false);
+		this.getParameters().add(this.numberOfPlates);
+		this.terrainSizeX = new IntegerParameter("terrain.terrainSizeX", 512, 2, 1 << 15, false);
+		this.getParameters().add(this.terrainSizeX);
+		this.terrainSizeY = new IntegerParameter("terrain.terrainSizeY", 256, 2, 1 << 15, false);
+		this.getParameters().add(this.terrainSizeY);
 		this.wrapAroundX = ParameterUtil.makeBooleanParameter("terrain.wrapAroundX");
 		this.getParameters().add(this.wrapAroundX);
 		this.wrapAroundY = ParameterUtil.makeBooleanParameter("terrain.wrapAroundY");
@@ -177,80 +181,137 @@ public class SquareTerrainConfigurer extends TerrainConfigurer<SquareTerrain> {
 
 	@Override
 	public SquareTerrain generate(RandomGenerator randomGenerator, Crease crease) {
-		int numberOfPlatesX = this.numberOfPlatesX.getCurrentValue().getValue();
-		int numberOfPlatesY = this.numberOfPlatesY.getCurrentValue().getValue();
-		int plateSizeY = this.plateSize.getCurrentValue().getValue();
-		int plateSizeX = this.plateSize.getCurrentValue().getValue();
-		int centerTileIndexY = plateSizeY / 2;
-		int centerTileIndexX = plateSizeX / 2;
-		int terrainSizeY = plateSizeY * numberOfPlatesY;
-		int terrainSizeX = plateSizeX * numberOfPlatesX;
+		int numberOfPlates = this.numberOfPlates.getCurrentValue().getValue();
+		int terrainSizeY = this.terrainSizeY.getCurrentValue().getValue();
+		int terrainSizeX = this.terrainSizeX.getCurrentValue().getValue();
+		int terrainSize = terrainSizeX * terrainSizeY;
 		boolean wrapAroundX = this.wrapAroundX.getCurrentValue();
 		boolean wrapAroundY = this.wrapAroundY.getCurrentValue();
 		boolean hasWater = this.waterParameters.getDeterminer().getCurrentValue();
 		boolean hasMagma = this.magmaParameters.getDeterminer().getCurrentValue();
 		SquareTerrain terrain = new SquareTerrain(terrainSizeX, terrainSizeY, hasWater, hasMagma);
 
-		// for all plates
-		for (int plateIndexY = 0; plateIndexY < numberOfPlatesY; ++plateIndexY) {
-			for (int plateIndexX = 0; plateIndexX < numberOfPlatesX; ++plateIndexX) {
+		// The x coordinates of tiles that haven't been assigned to a plate
+		int[] tilesX = new int[terrainSize];
+		// The y coordinates of tiles that haven't been assigned to a plate
+		int[] tilesY = new int[terrainSize];
+		// Populate the list
+		for (int y = 0, t = 0; y < terrainSizeY; ++y) {
+			for (int x = 0; x < terrainSizeX; ++x) {
+				tilesX[t] = x;
+				tilesY[t] = y;
+				++t;
+			}
+		}
+		// Shuffle the list
+		for (int t = 0; t < terrainSize; ++t) {
+			int r = (int) randomGenerator.generateLong(t, terrainSize);
+			int tileX = tilesX[t];
+			tilesX[t] = tilesX[r];
+			tilesX[r] = tileX;
+			int tileY = tilesY[t];
+			tilesY[t] = tilesY[r];
+			tilesY[r] = tileY;
+		}
 
-				int startTileIndexY = plateIndexY * plateSizeY + centerTileIndexY;
-				int startTileIndexX = plateIndexX * plateSizeX + centerTileIndexX;
+		// plateTilesX[plateIndex] is a list of the x coordinate of all tiles
+		// in the plate with index plateIndex
+		int[][] plateTilesX = new int[numberOfPlates][1];
+		int[][] plateTilesY = new int[numberOfPlates][1];
+		// Assign the first (numberOfPlates) tiles to each plate
+		for (int p = 0; p < numberOfPlates; ++p) {
+			plateTilesX[p][0] = tilesX[0];
+			plateTilesY[p][0] = tilesY[0];
+			tilesX = ArrayUtil.remove(tilesX, 0);
+			tilesY = ArrayUtil.remove(tilesY, 0);
+		}
 
-				// randomly choose end tile
-				int endTileIndexY = (int) randomGenerator.generateLong(plateIndexY * plateSizeY,
-						(plateIndexY + 1) * plateSizeY);
-				int endTileIndexX = (int) randomGenerator.generateLong(plateIndexX * plateSizeX,
-						(plateIndexX + 1) * plateSizeX);
+		loop: while (tilesX.length > 0) {
+			// For all unassigned tiles
+			for (int t = 0; t < tilesX.length; ++t) {
+				// Coordinates of the current unassigned tile
+				int tileX = tilesX[t];
+				int tileY = tilesY[t];
+				
+				// For all plates
+				for (int p = 0; p < plateTilesX.length; ++p) {
+					// For all tiles currently assigned to the plate
+					for (int pt = 0; pt < plateTilesX[p].length; ++pt) {
+						// Coordinates of the current tile in the plate
+						int plateTileX = plateTilesX[p][pt];
+						int plateTileY = plateTilesY[p][pt];
+						// Whether tile neighbors plateTile
+						boolean isNeighboring = ((plateTileX - 1) == tileX && plateTileY == tileY)
+								|| (plateTileX == tileX && (plateTileY - 1) == tileY)
+								|| ((plateTileX + 1) == tileX && plateTileY == tileY)
+								|| (plateTileX == tileX && (plateTileY + 1) == tileY);
+						if (isNeighboring) {
+							tilesX = ArrayUtil.remove(tilesX, t);
+							tilesY = ArrayUtil.remove(tilesY, t);
+							plateTilesX[p] = ArrayUtil.add(plateTilesX[p], tileX);
+							plateTilesY[p] = ArrayUtil.add(plateTilesY[p], tileY);
+							// Reset the iteration
+							continue loop;
+						}
+					}
+				}
+			}
+		}
 
-				for (int tileIndexY = 0; tileIndexY < terrainSizeY; ++tileIndexY) {
-					for (int tileIndexX = 0; tileIndexX < terrainSizeX; ++tileIndexX) {
+		for (int p = 0; p < numberOfPlates; ++p) {
+			int startTileIndexInPlate = (int) randomGenerator.generateLong(plateTilesX[p].length);
+			int startTileIndexX = plateTilesX[p][startTileIndexInPlate];
+			int startTileIndexY = plateTilesY[p][startTileIndexInPlate];
+			int endTileIndexInPlate = (int) randomGenerator.generateLong(plateTilesX[p].length);
+			int endTileIndexX = plateTilesX[p][endTileIndexInPlate];
+			int endTileIndexY = plateTilesY[p][endTileIndexInPlate];
 
-						// set land
-						double land = terrain.getLandLayer().getTile(tileIndexX, tileIndexY);
+			for (int tileIndexY = 0; tileIndexY < terrainSizeY; ++tileIndexY) {
+				for (int tileIndexX = 0; tileIndexX < terrainSizeX; ++tileIndexX) {
+
+					// set land
+					double land = terrain.getLandLayer().getTile(tileIndexX, tileIndexY);
+					land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY, tileIndexX,
+							tileIndexY);
+					if (wrapAroundY) {
 						land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY,
+								tileIndexX, tileIndexY - terrainSizeY);
+						land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY,
+								tileIndexX, tileIndexY + terrainSizeY);
+					}
+					if (wrapAroundX) {
+						land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY,
+								tileIndexX - terrainSizeX, tileIndexY);
+						land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY,
+								tileIndexX + terrainSizeX, tileIndexY);
+					}
+					terrain.getLandLayer().setTile(tileIndexX, tileIndexY, land);
+
+					// set magma
+					if (terrain.getMagmaLayer() != null) {
+						double magma = terrain.getMagmaLayer().getTile(tileIndexX, tileIndexY);
+						// magma is generated like land
+						// but in the opposite direction of the plate movement
+						magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
 								tileIndexX, tileIndexY);
 						if (wrapAroundY) {
-							land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY,
+							magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
 									tileIndexX, tileIndexY - terrainSizeY);
-							land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY,
+							magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
 									tileIndexX, tileIndexY + terrainSizeY);
 						}
 						if (wrapAroundX) {
-							land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY,
+							magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
 									tileIndexX - terrainSizeX, tileIndexY);
-							land += crease.valueAt(startTileIndexX, startTileIndexY, endTileIndexX, endTileIndexY,
+							magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
 									tileIndexX + terrainSizeX, tileIndexY);
 						}
-						terrain.getLandLayer().setTile(tileIndexX, tileIndexY, land);
-
-						// set magma
-						if (terrain.getMagmaLayer() != null) {
-							double magma = terrain.getMagmaLayer().getTile(tileIndexX, tileIndexY);
-							// magma is generated like land
-							// but in the opposite direction of the plate movement
-							magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
-									tileIndexX, tileIndexY);
-							if (wrapAroundY) {
-								magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
-										tileIndexX, tileIndexY - terrainSizeY);
-								magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
-										tileIndexX, tileIndexY + terrainSizeY);
-							}
-							if (wrapAroundX) {
-								magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
-										tileIndexX - terrainSizeX, tileIndexY);
-								magma += crease.valueAt(endTileIndexX, endTileIndexY, startTileIndexX, startTileIndexY,
-										tileIndexX + terrainSizeX, tileIndexY);
-							}
-							terrain.getMagmaLayer().setTile(tileIndexX, tileIndexY, magma);
-						}
-
+						terrain.getMagmaLayer().setTile(tileIndexX, tileIndexY, magma);
 					}
-				}
 
+				}
 			}
+
 		}
 
 		// for all tiles

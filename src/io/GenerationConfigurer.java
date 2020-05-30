@@ -27,6 +27,7 @@ import io.crease.PyramidConfigurer;
 import io.crease.SmoothStepConfigurer;
 import io.crease.SmootherStepConfigurer;
 import io.crease.SmoothestStepConfigurer;
+import io.terrain.IrregularSquareTerrainConfigurer;
 import io.terrain.SquareTerrainConfigurer;
 import parameter.parameter.Configurer;
 import parameter.parameter.OptionParameter;
@@ -73,6 +74,8 @@ public class GenerationConfigurer extends Configurer {
 		// Instance terrain type parameter options
 		this.terrainType.addOption(new InternationalizedOption<TerrainConfigurer<?>>("terrain.type.square",
 				new SquareTerrainConfigurer("terrain.type.square")));
+		this.terrainType.addOption(new InternationalizedOption<TerrainConfigurer<?>>("terrain.type.square.irregular",
+				new IrregularSquareTerrainConfigurer("terrain.type.square.irregular")));
 		// Instance crease type parameter
 		this.creaseType = new OptionParameter<>("crease.type");
 		// Instance crease type parameter options

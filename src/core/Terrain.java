@@ -40,9 +40,9 @@ public abstract class Terrain<L extends Terrain.TerrainLayer> {
 	 */
 	protected long seed;
 	/**
-	 * The height layer of this terrain. Shouldn't be null.
+	 * The land layer of this terrain. Shouldn't be null.
 	 */
-	protected L heightLayer;
+	protected L landLayer;
 	/**
 	 * The water layer of this terrain. Should be null if the terrain doesn't
 	 * implement water.
@@ -91,21 +91,21 @@ public abstract class Terrain<L extends Terrain.TerrainLayer> {
 	}
 
 	/**
-	 * Get the height layer of this terrain.
+	 * Get the land layer of this terrain.
 	 * 
-	 * @return The height layer of this terrain.
+	 * @return The land layer of this terrain.
 	 */
-	public L getHeightLayer() {
-		return this.heightLayer;
+	public L getLandLayer() {
+		return this.landLayer;
 	}
 
 	/**
-	 * Set the height layer of this terrain.
+	 * Set the land layer of this terrain.
 	 * 
-	 * @param heightLayer The height layer of this terrain.
+	 * @param landLayer The land layer of this terrain.
 	 */
-	public void setHeightLayer(L heightLayer) {
-		this.heightLayer = heightLayer;
+	public void setLandLayer(L landLayer) {
+		this.landLayer = landLayer;
 	}
 
 	/**

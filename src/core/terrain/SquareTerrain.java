@@ -47,7 +47,7 @@ public class SquareTerrain extends Terrain<SquareTerrain.SquareTerrainLayer> {
 	 * @param hasMagma Whether the terrain has magma.
 	 */
 	public SquareTerrain(int sizeX, int sizeY, boolean hasWater, boolean hasMagma) {
-		this.heightLayer = new SquareTerrainLayer(sizeX, sizeY);
+		this.landLayer = new SquareTerrainLayer(sizeX, sizeY);
 		if (hasWater) {
 			this.waterLayer = new SquareTerrainLayer(sizeX, sizeY);
 		}
@@ -145,7 +145,7 @@ public class SquareTerrain extends Terrain<SquareTerrain.SquareTerrainLayer> {
 	 * @return The size of this terrain along the x axis.
 	 */
 	public int getSizeX() {
-		return this.heightLayer.getSizeX();
+		return this.landLayer.getSizeX();
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class SquareTerrain extends Terrain<SquareTerrain.SquareTerrainLayer> {
 	 * @return The size of this terrain along the y axis.
 	 */
 	public int getSizeY() {
-		return this.heightLayer.getSizeY();
+		return this.landLayer.getSizeY();
 	}
 
 }

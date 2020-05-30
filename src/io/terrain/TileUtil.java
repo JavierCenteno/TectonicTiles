@@ -41,7 +41,7 @@ public class TileUtil {
 	 * representing the green channel and the fourth byte representing the blue
 	 * channel.
 	 * 
-	 * @param height  The height value of the tile.
+	 * @param land    The land value of the tile.
 	 * @param water   The water value of the tile. Should be negative infinity if
 	 *                the terrain has no water layer.
 	 * @param magma   The magma value of the tile. Should be negative infinity if
@@ -53,27 +53,27 @@ public class TileUtil {
 	 *         representing the green channel and the fourth byte representing the
 	 *         blue channel.
 	 */
-	public static int tileToColor(double height, double water, double magma, double minimum, double maximum) {
-		double boundedHeight = (height - minimum) / (maximum - minimum);
+	public static int tileToColor(double land, double water, double magma, double minimum, double maximum) {
+		double boundedLand = (land - minimum) / (maximum - minimum);
 		double boundedWater = (water - minimum) / (maximum - minimum);
 		double boundedMagma = (magma - minimum) / (maximum - minimum);
 		int alpha = 0xFF;
 		int red = 0x00;
 		int green = 0x00;
 		int blue = 0x00;
-		if (boundedMagma > boundedHeight && boundedMagma > boundedWater) {
+		if (boundedMagma > boundedLand && boundedMagma > boundedWater) {
 			red = (int) (128.0d * boundedMagma);
 		} else {
-			if (boundedHeight > boundedWater) {
+			if (boundedLand > boundedWater) {
 				if (Double.isFinite(boundedWater)) {
 					// drier terrain should have a higher red level, that is, be yellower
-					red = (int) (128.0d * (boundedHeight - boundedWater));
+					red = (int) (128.0d * (boundedLand - boundedWater));
 				}
 				// lower areas are lighter, higher areas are darker
-				green = 0xFF - (int) (128.0d * boundedHeight);
+				green = 0xFF - (int) (128.0d * boundedLand);
 			} else {
 				// shallower waters are lighter, deeper waters are darker
-				blue = 0xFF - (int) (128.0d * (boundedWater - boundedHeight));
+				blue = 0xFF - (int) (128.0d * (boundedWater - boundedLand));
 			}
 		}
 		return (alpha << 24) | (red << 16) | (green << 8) | blue;

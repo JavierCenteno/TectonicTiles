@@ -611,7 +611,7 @@ public class OptionParameter<T> extends Parameter<T> {
 			throw new CancelledException();
 		}
 		if (value.isEmpty()) {
-			if (!(this.getDefaultValue() instanceof NullOption)) {
+			if (!(this.getDefaultValueOption() instanceof NullOption)) {
 				this.reset();
 			} else {
 				throw new IllegalArgumentException(EXCEPTION_NO_SUCH_VALUE.getValue("{value}", value));

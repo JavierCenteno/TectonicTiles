@@ -24,6 +24,12 @@
 
 
 
+<h2>Download</h2>
+
+<a href="https://github.com/JavierCenteno/TectonicTiles/tree/master/runnable" title="Runnable">You can download the runnable here.</a>
+
+
+
 <h2>Help</h2>
 
 <ul>

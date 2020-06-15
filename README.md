@@ -12,6 +12,8 @@
 
 <p>This program is Javier Centeno Vega's end of degree project (TFG) for the Software Engineering degree at the University of Seville.</p>
 
+<a href="https://tectonictiles.wordpress.com/?order=asc" title="Blog">You can read more about the algorithm here.</a>
+
 
 
 <h2>The algorithm</h2>

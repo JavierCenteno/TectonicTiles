@@ -1,6 +1,14 @@
 <h1>Tectonic tiles v0.4</h1>
 
-<h2>This project is no longer being maintained! Head over to <a href="https://github.com/JavierCenteno/TectonicTiles.js">here</a> to see the newer version.</h2>
+
+
+<h2>Important notice!</h2>
+
+<p>This project is no longer being maintained! Head over to <a href="https://github.com/JavierCenteno/TectonicTiles.js">here</a> to see the newer version.</p>
+
+
+
+<h2>Copyright and license</h2>
 
 <p>(c) 2020</p>
 
